@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Boot {
@@ -26,15 +27,12 @@ public class Boot {
         argsList.addAll(Arrays.asList(args));
         try {
             ProcessBuilder pb = new ProcessBuilder(argsList);
+            pb.redirectErrorStream(true);
             Process process = pb.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            StringBuilder builder = new StringBuilder();
-            String line = null;
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
             while((line = reader.readLine()) != null) {
-                builder.append(line);
-                builder.append(System.getProperty("line.separator"));
-//                log.info(line);
-                System.out.println(line);
+                log.info(line);
             }
         } catch (IOException e) {
             e.printStackTrace();
